@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "xcodebuild": {
+      "command": "npx",
+      "args": ["-y", "xcodebuildmcp@latest"],
+      "description": "Xcode build and test operations for iOS apps",
+      "env": {
+        "PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/Users/vkosmirak/.local/bin:${PATH}"
+      }
+    },
+    "ios-simulator": {
+      "command": "npx",
+      "args": ["-y", "ios-simulator-mcp"],
+      "description": "iOS Simulator management and control",
+      "env": {
+        "PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/Users/vkosmirak/.local/bin:${PATH}"
+      }
+    }
+  }
+}
+
