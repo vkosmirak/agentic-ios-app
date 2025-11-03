@@ -8,7 +8,7 @@
 import Foundation
 
 /// Model representing a world clock
-struct ClockModel: Identifiable, Equatable {
+struct ClockModel: Identifiable, Equatable, Codable {
     let id: UUID
     let cityName: String
     let timeZone: TimeZone
@@ -23,6 +23,29 @@ struct ClockModel: Identifiable, Equatable {
         self.id = id
         self.cityName = cityName
         self.timeZone = timeZone
+    }
+    
+    // MARK: - Codable
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case cityName
+        case timeZoneIdentifier
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        cityName = try container.decode(String.self, forKey: .cityName)
+        let timeZoneIdentifier = try container.decode(String.self, forKey: .timeZoneIdentifier)
+        timeZone = TimeZone(identifier: timeZoneIdentifier) ?? TimeZone.current
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(cityName, forKey: .cityName)
+        try container.encode(timeZone.identifier, forKey: .timeZoneIdentifier)
     }
 }
 

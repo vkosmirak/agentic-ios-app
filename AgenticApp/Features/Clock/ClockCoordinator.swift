@@ -24,7 +24,8 @@ final class ClockCoordinator: Coordinator {
     @ViewBuilder
     func rootView() -> some View {
         let timeService = dependencyContainer.resolve(TimeServiceProtocol.self)
-        let viewModel = ClockViewModel(timeService: timeService)
+        let clockService = dependencyContainer.resolve(ClockServiceProtocol.self)
+        let viewModel = ClockViewModel(timeService: timeService, clockService: clockService)
         ClockView(viewModel: viewModel)
     }
 }

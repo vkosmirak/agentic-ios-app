@@ -25,6 +25,10 @@ struct AgenticAppApp: App {
             AlarmService() as AlarmServiceProtocol
         }
         
+        container.register(ClockServiceProtocol.self) {
+            ClockService() as ClockServiceProtocol
+        }
+        
         self.dependencyContainer = container
         
         // Initialize and start app coordinator
