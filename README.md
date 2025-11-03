@@ -8,8 +8,6 @@ This repository is set up for Cursor agents to plan, develop, test, and QA featu
 
 **Quick Start**: See [AGENTS.md](./AGENTS.md) for simple instructions on how to build, test, run, and verify the app.
 
-**Setup**: See [AGENT_SETUP.md](./AGENT_SETUP.md) for detailed MCP server configuration and setup instructions.
-
 ## MCP Servers
 
 This project uses two MCP servers:
@@ -24,10 +22,8 @@ Configuration is in `.cursor/mcp.json`.
 - `AgenticApp/` - Main app source code
 - `AgenticAppTests/` - Unit tests
 - `AgenticAppUITests/` - UI tests
-- `screenshots/` - Screenshots captured during verification
 - `.cursor/mcp.json` - MCP server configuration
 - `AGENTS.md` - Quick reference for agents
-- `AGENT_SETUP.md` - Detailed setup documentation
 
 ## Development
 
