@@ -17,57 +17,20 @@ struct AddEditAlarmView: View {
     @State private var sound: String
     @State private var snooze: Bool
     
-    let alarm: AlarmModel?
+    let alarm: AlarmModel
+    let isNewAlarm: Bool
     let onSave: (AlarmModel) -> Void
     
-    init(alarm: AlarmModel? = nil, onSave: @escaping (AlarmModel) -> Void) {
+    init(alarm: AlarmModel = .default, onSave: @escaping (AlarmModel) -> Void) {
         self.alarm = alarm
+        self.isNewAlarm = (alarm == .default)
         self.onSave = onSave
         
-        let values = alarm.map(InitialValues.from) ?? InitialValues.defaults()
-        _time = State(initialValue: values.time)
-        _label = State(initialValue: values.label)
-        _repeatDays = State(initialValue: values.repeatDays)
-        _sound = State(initialValue: values.sound)
-        _snooze = State(initialValue: values.snooze)
-    }
-    
-    /// Helper struct for initial values
-    private struct InitialValues {
-        let time: Date
-        let label: String
-        let repeatDays: Set<Weekday>
-        let sound: String
-        let snooze: Bool
-        
-        static func from(_ alarm: AlarmModel) -> InitialValues {
-            InitialValues(
-                time: alarm.time,
-                label: alarm.label ?? "",
-                repeatDays: alarm.repeatDays,
-                sound: alarm.sound,
-                snooze: alarm.snooze
-            )
-        }
-        
-        static func defaults() -> InitialValues {
-            InitialValues(
-                time: Self.nextRoundedTime(),
-                label: "",
-                repeatDays: [],
-                sound: "Radar",
-                snooze: true
-            )
-        }
-        
-        private static func nextRoundedTime() -> Date {
-            let calendar = Calendar.current
-            let now = Date()
-            let minutes = calendar.component(.minute, from: now)
-            let roundedMinutes = ((minutes / 5) + 1) * 5
-            let minutesToAdd = roundedMinutes - minutes
-            return calendar.date(byAdding: .minute, value: minutesToAdd, to: now) ?? now
-        }
+        _time = State(initialValue: alarm.time)
+        _label = State(initialValue: alarm.label ?? "")
+        _repeatDays = State(initialValue: alarm.repeatDays)
+        _sound = State(initialValue: alarm.sound)
+        _snooze = State(initialValue: alarm.snooze)
     }
     
     var body: some View {
@@ -116,7 +79,7 @@ struct AddEditAlarmView: View {
                     Toggle("Snooze", isOn: $snooze)
                 }
             }
-            .navigationTitle(alarm == nil ? "Add Alarm" : "Edit Alarm")
+            .navigationTitle(isNewAlarm ? "Add Alarm" : "Edit Alarm")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -136,10 +99,10 @@ struct AddEditAlarmView: View {
     
     private func saveAlarm() {
         let alarmToSave = AlarmModel(
-            id: alarm?.id ?? UUID(),
+            id: isNewAlarm ? UUID() : alarm.id,
             time: time,
             label: label.isEmpty ? nil : label,
-            isEnabled: alarm?.isEnabled ?? true,
+            isEnabled: alarm.isEnabled,
             repeatDays: repeatDays,
             sound: sound,
             snooze: snooze

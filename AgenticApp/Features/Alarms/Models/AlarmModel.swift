@@ -72,6 +72,15 @@ struct AlarmModel: Identifiable, Codable, Equatable {
         self.snooze = snooze
     }
     
+    /// Custom Equatable implementation that ignores UUID and time for comparison
+    static func == (lhs: AlarmModel, rhs: AlarmModel) -> Bool {
+        lhs.label == rhs.label &&
+        lhs.isEnabled == rhs.isEnabled &&
+        lhs.repeatDays == rhs.repeatDays &&
+        lhs.sound == rhs.sound &&
+        lhs.snooze == rhs.snooze
+    }
+    
     /// Formatted time string (e.g., "8:30 AM")
     var formattedTime: String {
         let formatter = DateFormatter()
@@ -91,6 +100,27 @@ struct AlarmModel: Identifiable, Codable, Equatable {
         
         let sortedDays = repeatDays.sorted { $0.rawValue < $1.rawValue }
         return sortedDays.map { $0.shortName }.joined(separator: ", ")
+    }
+    
+    /// Creates a default alarm with time rounded to next 5 minutes
+    static var `default`: AlarmModel {
+        let calendar = Calendar.current
+        let now = Date()
+        let minutes = calendar.component(.minute, from: now)
+        let roundedMinutes = ((minutes / 5) + 1) * 5
+        let minutesToAdd = roundedMinutes - minutes
+        let defaultTime = calendar.date(byAdding: .minute, value: minutesToAdd, to: now) ?? now
+        
+        return AlarmModel(time: defaultTime)
+    }
+    
+    /// Checks if alarm matches default characteristics (ignoring time and UUID)
+    func matchesDefault() -> Bool {
+        label == nil &&
+        repeatDays.isEmpty &&
+        sound == "Radar" &&
+        snooze == true &&
+        isEnabled == true
     }
 }
 
