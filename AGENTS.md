@@ -53,10 +53,16 @@ test_sim({
 
 ### Verify App
 
+**⚠️ IMPORTANT: Use `describe_ui()` by default, `screenshots()` only when needed**
+
 ```javascript
-// Inspect UI hierarchy - retry if empty (app may still be loading)
 describe_ui({ simulatorUuid: "B6E73094-CED6-458D-B9F5-9D65034F10E0" })
+// Returns structured JSON with all UI elements, coordinates, and actions
 // If children array is empty, retry after a brief delay (app still loading)
+
+// ❌ AVOID: Screenshots unless specifically needed for visual verification
+screenshot({ simulatorUuid: "B6E73094-CED6-458D-B9F5-9D65034F10E0" })
+// Only use when user explicitly requests visual verification or debugging visual issues
 
 // Check logs (if debugging)
 start_sim_log_cap({
@@ -72,7 +78,7 @@ stop_sim_log_cap({ logSessionId: "SESSION_ID" })
 **Typical workflow (2 MCP calls):**
 
 1. `build_run_sim()` - Build, install, and launch app
-2. `describe_ui()` - Verify UI elements (retry if children array is empty - app may still be loading)
+2. `describe_ui()` - Verify UI elements programmatically (retry if children array is empty - app may still be loading)
 
 **Note:** If `describe_ui()` returns an empty `children` array, retry after a brief delay. The app may still be initializing after launch.
 
@@ -86,5 +92,4 @@ stop_sim_log_cap({ logSessionId: "SESSION_ID" })
 ## Notes
 
 - Always use `simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0"` (iPhone 16 Pro iOS 26.0)
-- Verification via MCP only - use `describe_ui()` for on-the-fly UI inspection
-- App requires iOS 26.0+ - the documented simulator UUID ensures correct version
+- **UI Verification**: Use `describe_ui()` by default for all UI inspection. Only use `screenshot()` when visual verification is explicitly needed or requested.
