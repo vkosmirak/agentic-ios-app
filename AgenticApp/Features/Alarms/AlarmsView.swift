@@ -68,6 +68,16 @@ struct AlarmsView: View {
                     viewModel.deleteAlarm(alarm)
                 }
             }
+            
+            Section {
+                EmptyView()
+            } footer: {
+                Text("гімн україни")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 8)
+            }
         }
         .listStyle(.plain)
     }
@@ -92,4 +102,3 @@ struct AlarmsView: View {
 #Preview {
     AlarmsView(viewModel: AlarmsViewModel(alarmService: AlarmService()))
 }
-

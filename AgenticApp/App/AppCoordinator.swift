@@ -15,21 +15,25 @@ final class AppCoordinator: Coordinator {
     private let clockCoordinator: ClockCoordinator
     private let alarmsCoordinator: AlarmsCoordinator
     private let timersCoordinator: TimersCoordinator
+    private let stopwatchCoordinator: StopwatchCoordinator
     
     init(dependencyContainer: DependencyContainer) {
         self.dependencyContainer = dependencyContainer
         self.clockCoordinator = ClockCoordinator(dependencyContainer: dependencyContainer)
         self.alarmsCoordinator = AlarmsCoordinator(dependencyContainer: dependencyContainer)
         self.timersCoordinator = TimersCoordinator(dependencyContainer: dependencyContainer)
+        self.stopwatchCoordinator = StopwatchCoordinator(dependencyContainer: dependencyContainer)
     }
     
     func start() {
         clockCoordinator.start()
         alarmsCoordinator.start()
         timersCoordinator.start()
+        stopwatchCoordinator.start()
         addChild(clockCoordinator)
         addChild(alarmsCoordinator)
         addChild(timersCoordinator)
+        addChild(stopwatchCoordinator)
     }
     
     @ViewBuilder
@@ -37,7 +41,8 @@ final class AppCoordinator: Coordinator {
         TabViewContainerView(
             clockView: AnyView(clockCoordinator.rootView()),
             alarmsView: AnyView(alarmsCoordinator.rootView()),
-            timersView: AnyView(timersCoordinator.rootView())
+            timersView: AnyView(timersCoordinator.rootView()),
+            stopwatchView: AnyView(stopwatchCoordinator.rootView())
         )
     }
 }
@@ -47,6 +52,7 @@ private struct TabViewContainerView: View {
     let clockView: AnyView
     let alarmsView: AnyView
     let timersView: AnyView
+    let stopwatchView: AnyView
     @State private var selectedTab = 0
     
     var body: some View {
@@ -74,6 +80,14 @@ private struct TabViewContainerView: View {
                         .accessibilityLabel("Timers")
                 }
                 .tag(2)
+            
+            stopwatchView
+                .tabItem {
+                    Label("Stopwatch", systemImage: "stopwatch")
+                        .accessibilityIdentifier("StopwatchTab")
+                        .accessibilityLabel("Stopwatch")
+                }
+                .tag(3)
         }
     }
 }

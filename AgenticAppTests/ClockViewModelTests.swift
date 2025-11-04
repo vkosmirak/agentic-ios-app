@@ -8,6 +8,7 @@
 import XCTest
 import Combine
 @testable import AgenticApp
+import Foundation
 
 final class ClockViewModelTests: XCTestCase {
     
@@ -18,19 +19,22 @@ final class ClockViewModelTests: XCTestCase {
     
     private var viewModel: ClockViewModel!
     private var mockTimeService: MockTimeService!
+    private var mockClockService: MockClockService!
     private var cancellables: Set<AnyCancellable>!
     
     override func setUp() {
         super.setUp()
         cancellables = []
         mockTimeService = MockTimeService()
-        viewModel = ClockViewModel(timeService: mockTimeService)
+        mockClockService = MockClockService()
+        viewModel = ClockViewModel(timeService: mockTimeService, clockService: mockClockService)
     }
     
     override func tearDown() {
         viewModel.onDisappear()
         viewModel = nil
         mockTimeService = nil
+        mockClockService = nil
         cancellables = nil
         super.tearDown()
     }
@@ -196,7 +200,7 @@ final class ClockViewModelTests: XCTestCase {
 //    }
 }
 
-// MARK: - Mock Time Service
+// MARK: - Mock Services
 
 private class MockTimeService: TimeServiceProtocol {
     var currentDate: Date = Date()
@@ -218,6 +222,37 @@ private class MockTimeService: TimeServiceProtocol {
         lastDifferenceSource = sourceTimeZone
         lastDifferenceTarget = targetTimeZone
         return timeDifferenceResult
+    }
+}
+
+private class MockClockService: ClockServiceProtocol {
+    var clocks: [ClockModel] = []
+    
+    func loadClocks() -> [ClockModel] {
+        return clocks.isEmpty ? ClockModel.defaultClocks : clocks
+    }
+    
+    func saveClocks(_ clocks: [ClockModel]) throws {
+        self.clocks = clocks
+    }
+    
+    func addClock(_ clock: ClockModel) throws {
+        if clocks.contains(where: { $0.id == clock.id || ($0.cityName == clock.cityName && $0.timeZone.identifier == clock.timeZone.identifier) }) {
+            return
+        }
+        clocks.append(clock)
+    }
+    
+    func deleteClock(id: UUID) throws {
+        clocks.removeAll { $0.id == id }
+    }
+    
+    func deleteClocks(ids: [UUID]) throws {
+        clocks.removeAll { ids.contains($0.id) }
+    }
+    
+    func getClock(id: UUID) -> ClockModel? {
+        return clocks.first { $0.id == id }
     }
 }
 

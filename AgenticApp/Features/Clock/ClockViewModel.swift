@@ -24,6 +24,7 @@ final class ClockViewModel: ViewModel {
         self.timeService = timeService
         self.clockService = clockService
         self.localTimeZone = localTimeZone
+        loadClocks()
     }
     
     func onAppear() {
