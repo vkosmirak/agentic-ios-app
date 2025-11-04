@@ -18,7 +18,7 @@ Quick reference guide for agents to build, test, run, and verify the iOS app.
 
 ### Run App (Build + Install + Launch)
 
-```javascript
+```
 build_run_sim({
   projectPath: "AgenticApp.xcodeproj",
   scheme: "AgenticApp",
@@ -28,7 +28,7 @@ build_run_sim({
 
 ### Build Only
 
-```javascript
+```
 build_sim({
   projectPath: "AgenticApp.xcodeproj",
   scheme: "AgenticApp",
@@ -38,12 +38,13 @@ build_sim({
 
 ### Run Tests
 
-```javascript
+```
 // Unit tests
 test_sim({
   projectPath: "AgenticApp.xcodeproj",
   scheme: "AgenticApp",
-  simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0"
+  simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0",
+  extraArgs: ["-disable-concurrent-testing"]
 })
 
 // UI tests only
@@ -74,7 +75,7 @@ test_sim({
 
 **⚠️ IMPORTANT: Use `describe_ui()` by default, `screenshots()` only when needed**
 
-```javascript
+```
 describe_ui({ simulatorUuid: "B6E73094-CED6-458D-B9F5-9D65034F10E0" })
 // Returns structured JSON with all UI elements, coordinates, and actions
 // If children array is empty, retry after a brief delay (app still loading)
@@ -112,7 +113,7 @@ stop_sim_log_cap({ logSessionId: "SESSION_ID" })
 
 ### Stop App
 
-```javascript
+```
 stop_app_sim({
   simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0",
   bundleId: "com.readdle.AgenticApp"
@@ -121,7 +122,7 @@ stop_app_sim({
 
 ### Clean Build
 
-```javascript
+```
 clean({
   projectPath: "AgenticApp.xcodeproj",
   scheme: "AgenticApp",
