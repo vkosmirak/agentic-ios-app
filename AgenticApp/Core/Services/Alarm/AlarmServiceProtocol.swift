@@ -28,3 +28,4 @@ protocol AlarmServiceProtocol {
     func getAlarm(id: UUID) -> AlarmModel?
 }
 
+
