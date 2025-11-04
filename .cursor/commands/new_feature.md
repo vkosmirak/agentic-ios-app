@@ -21,7 +21,7 @@ Analyze description and create plan: feature name, models, services, ViewModel, 
 Reference existing features (Timers, Alarms, Clock) and `@ARCHITECTURE.md`.
 
 ### 3. Test
-Write tests: Model, ViewModel, Service (if new). All must pass. Use `@AGENTS.md` for commands.
+Write tests: Model, ViewModel, Service (if new). Run tests and make sure all pass. Use `@AGENTS.md` for commands.
 
 ### 4. Verify
 Build, run, verify UI and functionality. Use `@verify.md` for comprehensive verification workflow.
