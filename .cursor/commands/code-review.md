@@ -77,7 +77,7 @@ For each issue found, provide:
 ### Example Output Format
 
 ```
-## 🔴 Critical: Memory Leak in ViewModel
+## 1. 🔴 Critical: Memory Leak in ViewModel
 
 **Location**: `Features/Home/HomeViewModel.swift:45`
 
@@ -97,7 +97,7 @@ self.service.delegate = weakSelf
 
 ---
 
-## 🟡 Warning: Missing Error Handling
+## 2. 🟡 Warning: Missing Error Handling
 
 **Location**: `Features/Home/HomeViewModel.swift:89`
 
