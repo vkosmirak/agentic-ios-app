@@ -47,9 +47,7 @@ test_sim({
   projectPath: "AgenticApp.xcodeproj",
   scheme: "AgenticApp",
   simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0",
-  extraArgs: [
-    "-disable-concurrent-testing"
-  ]
+  extraArgs: []
 })
 
 // UI tests only
@@ -57,10 +55,7 @@ test_sim({
   projectPath: "AgenticApp.xcodeproj",
   scheme: "AgenticApp",
   simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0",
-  extraArgs: [
-    "-disable-concurrent-testing", 
-    "-only-testing:AgenticAppUITests"
-  ]
+  extraArgs: ["-only-testing:AgenticAppUITests"]
 })
 
 // Run specific test method or class
@@ -68,10 +63,7 @@ test_sim({
   projectPath: "AgenticApp.xcodeproj",
   scheme: "AgenticApp",
   simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0",
-  extraArgs: [
-    "-disable-concurrent-testing",
-    "-only-testing:AgenticAppTests/TimeServiceTests/testCurrentTimeReturnsValidDate"
-    ]
+  extraArgs: ["-only-testing:AgenticAppTests/TimeServiceTests/testCurrentTimeReturnsValidDate"]
 })
 ```
 
