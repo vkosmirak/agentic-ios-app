@@ -6,6 +6,8 @@ Quick reference guide for agents to build, test, run, and verify the iOS app.
 
 **Note**: All paths are relative to the workspace root (`/Users/vkosmirak/src/agentic-ios-app/`). If running from a different directory, use absolute paths. All commands shown are MCP (Model Context Protocol) tool calls.
 
+**⚠️ IMPORTANT: Do NOT use `xcodebuild` directly.** Always use the MCP tool calls provided (e.g., `build_run_sim()`, `test_sim()`, `build_sim()`) instead of running `xcodebuild` commands via terminal.
+
 ## Project Info
 
 - **Project**: AgenticApp
@@ -86,6 +88,7 @@ Use `@verify.md` command for comprehensive verification with UI checklist and te
 
 **Avoid redundant calls:**
 
+- ❌ `xcodebuild` - Use MCP tools (`build_run_sim()`, `test_sim()`, etc.) instead
 - ❌ `list_sims()` - Use hardcoded `simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0"`
 - ❌ `get_app_bundle_id()` - Use known value: `com.readdle.AgenticApp`
 - ❌ `list_schemes()` - Use known value: `AgenticApp`
@@ -114,6 +117,7 @@ clean({
 
 ## Notes
 
+- **Never use `xcodebuild` directly** - Always use MCP tool calls (`build_run_sim()`, `test_sim()`, `build_sim()`, etc.)
 - Always use `simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0"` (iPhone 16 Pro iOS 18.4)
 - **Verification**: Use `@verify.md` command for comprehensive verification workflow and UI checklist
 - **Parameter Names**: Build/test commands use `simulatorId`, while UI inspection commands (`describe_ui`, `screenshot`, `start_sim_log_cap`) use `simulatorUuid` - both accept the same UUID value.
