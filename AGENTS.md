@@ -63,7 +63,14 @@ test_sim({
 })
 ```
 
-### Verify App
+### Verify functionality
+
+**Verification Strategy:**
+
+- Before executing tests, prepare test cases (list of specific steps) that verifies intended functionality
+- Keep test cases minimal
+- **Do not jump into fixing directly!** Focus on collecting all success/failed test cases. Report them in the end. Fix after (if asked before)
+- Avoid running the entire test suite unless explicitly requested
 
 **⚠️ IMPORTANT: Use `describe_ui()` by default, `screenshots()` only when needed**
 
@@ -85,7 +92,7 @@ start_sim_log_cap({
 stop_sim_log_cap({ logSessionId: "SESSION_ID" })
 ```
 
-## Optimized Workflow
+## Verification Workflow
 
 **Typical workflow (2 MCP calls):**
 
