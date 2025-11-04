@@ -42,10 +42,12 @@ AgenticApp/
 │
 ├── Features/
 │   └── [FeatureName]/
-│       ├── [Feature]View.swift
+│       ├── [Feature]View.swift          # Main feature view
 │       ├── [Feature]ViewModel.swift
 │       ├── [Feature]Coordinator.swift
-│       └── Models/
+│       ├── Models/                       # Feature-specific models
+│       └── Views/                        # Sub-views, reusable components, and modals
+│           └── [SubView]View.swift
 │
 └── Resources/
     └── Assets.xcassets/
@@ -55,8 +57,8 @@ AgenticApp/
 
 ### Core Architecture
 
-- **Coordinator.swift**: Protocol for navigation coordination (`start()`, child coordinators)
-- **ViewModel.swift**: Base protocol with ObservableObject conformance, Combine setup, error handling
+- **Coordinator.swift**: Protocol for navigation coordination (`start()`, child coordinators) with extension methods for managing child coordinators (`addChild()`, `removeChild()`, `removeAllChildren()`)
+- **ViewModel.swift**: Base protocol with ObservableObject conformance, Combine setup (`cancellables`), lifecycle hooks (`onAppear()`, `onDisappear()`), and error handling
 
 ### Dependency Injection
 
@@ -76,6 +78,7 @@ Each feature follows the pattern:
 - `[Feature]ViewModel.swift`: State management with `@Published`, business logic, error handling
 - `[Feature]Coordinator.swift`: Navigation flows and child coordinator management
 - `Models/`: Feature-specific models (Codable for API responses)
+- `Views/`: Sub-views, reusable components, and modal views for the feature
 
 ## Technical Patterns
 
@@ -86,11 +89,16 @@ Each feature follows the pattern:
 **Example DI Usage**:
 
 ```swift
-class HomeViewModel: ObservableObject {
+class HomeViewModel: ViewModel {
+    var cancellables: Set<AnyCancellable> = []
     private let networkService: NetworkServiceProtocol
     
     init(networkService: NetworkServiceProtocol) {
         self.networkService = networkService
+    }
+    
+    func onAppear() {
+        // Load data when view appears
     }
 }
 ```
@@ -101,6 +109,24 @@ class HomeViewModel: ObservableObject {
 protocol Coordinator: AnyObject {
     func start()
     var childCoordinators: [Coordinator] { get set }
+}
+
+// Typical implementation:
+final class FeatureCoordinator: Coordinator {
+    var childCoordinators: [Coordinator] = []
+    private let dependencyContainer: DependencyContainer
+    
+    func start() {
+        // Initialize child coordinators
+    }
+    
+    @ViewBuilder
+    func rootView() -> some View {
+        // Create and return the feature's root view
+        let service = dependencyContainer.resolve(ServiceProtocol.self)
+        let viewModel = FeatureViewModel(service: service)
+        return FeatureView(viewModel: viewModel)
+    }
 }
 ```
 
