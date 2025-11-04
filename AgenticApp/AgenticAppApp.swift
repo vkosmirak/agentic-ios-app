@@ -33,10 +33,6 @@ struct AgenticAppApp: App {
             TimerService() as TimerServiceProtocol
         }
         
-        container.register(StopwatchServiceProtocol.self) {
-            StopwatchService() as StopwatchServiceProtocol
-        }
-        
         self.dependencyContainer = container
         
         // Initialize and start app coordinator
