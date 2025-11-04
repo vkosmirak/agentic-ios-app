@@ -73,43 +73,16 @@ test_sim({
 })
 ```
 
-### Verify functionality
+### Verify Functionality
 
-**Verification Strategy:**
+**For detailed verification workflow and UI checklist, see `@verify.md`**
 
-- Before executing tests, prepare test cases (list of specific steps) that verifies intended functionality
-- Keep test cases minimal
-- **Do not jump into fixing directly!** Focus on collecting all success/failed test cases. Report them in the end. Fix after (if asked before)
-- Avoid running the entire test suite unless explicitly requested
-
-**⚠️ IMPORTANT: Use `describe_ui()` by default, `screenshots()` only when needed**
-
-```
-describe_ui({ simulatorUuid: "B6E73094-CED6-458D-B9F5-9D65034F10E0" })
-// Returns structured JSON with all UI elements, coordinates, and actions
-// If children array is empty, retry after a brief delay (app still loading)
-
-// ❌ AVOID: Screenshots unless specifically needed for visual verification
-screenshot({ simulatorUuid: "B6E73094-CED6-458D-B9F5-9D65034F10E0" })
-// Only use when user explicitly requests visual verification or debugging visual issues
-
-// Check logs (if debugging)
-start_sim_log_cap({
-  simulatorUuid: "B6E73094-CED6-458D-B9F5-9D65034F10E0",
-  bundleId: "com.readdle.AgenticApp"
-})
-// ... later ...
-stop_sim_log_cap({ logSessionId: "SESSION_ID" })
-```
-
-## Verification Workflow
-
-**Typical workflow (2 MCP calls):**
-
+Quick verification:
 1. `build_run_sim()` - Build, install, and launch app
-2. `describe_ui()` - Verify UI elements programmatically (retry if children array is empty - app may still be loading)
+2. `describe_ui()` - Verify UI elements programmatically
+3. Navigate and test functionality
 
-**Note:** If `describe_ui()` returns an empty `children` array, retry after a brief delay. The app may still be initializing after launch.
+Use `@verify.md` command for comprehensive verification with UI checklist and test case planning.
 
 **Avoid redundant calls:**
 
@@ -142,5 +115,5 @@ clean({
 ## Notes
 
 - Always use `simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0"` (iPhone 16 Pro iOS 18.4)
-- **UI Verification**: Use `describe_ui()` by default for all UI inspection. Only use `screenshot()` when visual verification is explicitly needed or requested.
+- **Verification**: Use `@verify.md` command for comprehensive verification workflow and UI checklist
 - **Parameter Names**: Build/test commands use `simulatorId`, while UI inspection commands (`describe_ui`, `screenshot`, `start_sim_log_cap`) use `simulatorUuid` - both accept the same UUID value.

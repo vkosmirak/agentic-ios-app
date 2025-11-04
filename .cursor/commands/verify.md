@@ -6,6 +6,20 @@ Build, run, and verify functionality of the iOS app in the simulator.
 
 ## Workflow
 
+### Phase 1: Plan (Upfront Preparation)
+
+1. **Read context** to understand what to verify
+2. **If no context provided** - ask user what to test. Do NOT proceed without clear instructions
+3. **If context provided** - create a detailed test plan upfront:
+   - List all verification steps in order
+   - Specify what to check (UI elements, states, functionality)
+   - Include expected outcomes for each step
+   - Present the plan before execution
+
+### Phase 2: Execute (Only After Plan is Ready)
+
+Execute the prepared test plan step by step:
+
 1. **Build & Run**: `build_run_sim()` then `open_sim()`
 2. **Navigate**: Use `tap()` to reach the feature/screen
 3. **Verify UI**: `describe_ui()` - Check for duplicates, state correctness, reference design compliance
@@ -22,15 +36,7 @@ Build, run, and verify functionality of the iOS app in the simulator.
 2. **State Correctness**: Verify UI updates for all states (empty → running → stopped)
 3. **Reference Design**: Compare with Apple Clock/etc. - button placement and visibility should match
 
-**When invoked:**
-
-1. **Read context** to understand what to verify
-2. **If no context provided** - ask user what to test. Do NOT proceed with testing without clear instructions
-3. **If context provided** - proceed with verification:
-   - Build, run, navigate to feature
-   - Verify UI matches design (check duplicates, states)
-   - Test functionality
-   - Report results (pass/fail per test case)
+**Important:** Always create the test plan FIRST, then execute it. Never execute steps without a prepared plan.
 
 ## Notes
 
