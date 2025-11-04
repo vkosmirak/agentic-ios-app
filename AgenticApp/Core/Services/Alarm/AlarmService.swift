@@ -17,11 +17,19 @@ final class AlarmService: AlarmServiceProtocol {
     }
     
     func loadAlarms() -> [AlarmModel] {
-        guard let data = userDefaults.data(forKey: alarmsKey),
-              let alarms = try? JSONDecoder().decode([AlarmModel].self, from: data) else {
+        guard let data = userDefaults.data(forKey: alarmsKey) else {
             return []
         }
-        return alarms
+        
+        do {
+            return try JSONDecoder().decode([AlarmModel].self, from: data)
+        } catch {
+            // Log error for debugging, but don't crash
+            print("⚠️ Failed to decode alarms: \(error.localizedDescription)")
+            // Optionally: clear corrupted data
+            userDefaults.removeObject(forKey: alarmsKey)
+            return []
+        }
     }
     
     func saveAlarms(_ alarms: [AlarmModel]) {

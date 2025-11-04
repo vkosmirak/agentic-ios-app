@@ -29,6 +29,10 @@ struct AgenticAppApp: App {
             ClockService() as ClockServiceProtocol
         }
         
+        container.register(TimerServiceProtocol.self) {
+            TimerService() as TimerServiceProtocol
+        }
+        
         self.dependencyContainer = container
         
         // Initialize and start app coordinator

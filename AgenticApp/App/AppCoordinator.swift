@@ -14,25 +14,30 @@ final class AppCoordinator: Coordinator {
     private let dependencyContainer: DependencyContainer
     private let clockCoordinator: ClockCoordinator
     private let alarmsCoordinator: AlarmsCoordinator
+    private let timersCoordinator: TimersCoordinator
     
     init(dependencyContainer: DependencyContainer) {
         self.dependencyContainer = dependencyContainer
         self.clockCoordinator = ClockCoordinator(dependencyContainer: dependencyContainer)
         self.alarmsCoordinator = AlarmsCoordinator(dependencyContainer: dependencyContainer)
+        self.timersCoordinator = TimersCoordinator(dependencyContainer: dependencyContainer)
     }
     
     func start() {
         clockCoordinator.start()
         alarmsCoordinator.start()
+        timersCoordinator.start()
         addChild(clockCoordinator)
         addChild(alarmsCoordinator)
+        addChild(timersCoordinator)
     }
     
     @ViewBuilder
     func rootView() -> some View {
         TabViewContainerView(
             clockView: AnyView(clockCoordinator.rootView()),
-            alarmsView: AnyView(alarmsCoordinator.rootView())
+            alarmsView: AnyView(alarmsCoordinator.rootView()),
+            timersView: AnyView(timersCoordinator.rootView())
         )
     }
 }
@@ -41,6 +46,7 @@ final class AppCoordinator: Coordinator {
 private struct TabViewContainerView: View {
     let clockView: AnyView
     let alarmsView: AnyView
+    let timersView: AnyView
     @State private var selectedTab = 0
     
     var body: some View {
@@ -60,6 +66,14 @@ private struct TabViewContainerView: View {
                         .accessibilityLabel("Alarms")
                 }
                 .tag(1)
+            
+            timersView
+                .tabItem {
+                    Label("Timers", systemImage: "timer")
+                        .accessibilityIdentifier("TimersTab")
+                        .accessibilityLabel("Timers")
+                }
+                .tag(2)
         }
     }
 }
