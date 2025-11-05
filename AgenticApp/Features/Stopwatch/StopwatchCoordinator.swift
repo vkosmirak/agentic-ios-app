@@ -1,5 +1,5 @@
 //
-//  TimersCoordinator.swift
+//  StopwatchCoordinator.swift
 //  AgenticApp
 //
 //  Created by Volodymyr Kosmirak on 03.11.2025.
@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-/// Coordinator for the Timers feature
-final class TimersCoordinator: Coordinator {
+/// Coordinator for the Stopwatch feature
+final class StopwatchCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     
     private let dependencyContainer: DependencyContainer
@@ -23,9 +23,9 @@ final class TimersCoordinator: Coordinator {
     
     @ViewBuilder
     func rootView() -> some View {
-        let timerService = dependencyContainer.resolve(TimerServiceProtocol.self)
-        let viewModel = TimersViewModel(timerService: timerService)
-        TimersView(viewModel: viewModel)
+        let stopwatchService = dependencyContainer.resolve(StopwatchServiceProtocol.self)
+        let viewModel = StopwatchViewModel(stopwatchService: stopwatchService)
+        StopwatchView(viewModel: viewModel)
     }
 }
 
