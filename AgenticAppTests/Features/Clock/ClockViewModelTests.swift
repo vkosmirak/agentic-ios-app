@@ -18,15 +18,15 @@ final class ClockViewModelTests: XCTestCase {
     private let publishedPropertyTimeout: TimeInterval = 0.1
     
     private var viewModel: ClockViewModel!
-    private var mockTimeService: MockTimeService!
-    private var mockClockService: MockClockService!
+    private var mockTimeService: TimeServiceMock!
+    private var mockClockService: ClockServiceMock!
     private var cancellables: Set<AnyCancellable>!
     
     override func setUp() {
         super.setUp()
         cancellables = []
-        mockTimeService = MockTimeService()
-        mockClockService = MockClockService()
+        mockTimeService = TimeServiceMock()
+        mockClockService = ClockServiceMock()
         viewModel = ClockViewModel(timeService: mockTimeService, clockService: mockClockService)
     }
     
@@ -198,61 +198,5 @@ final class ClockViewModelTests: XCTestCase {
 //        // Then
 //        XCTAssertFalse(receivedClocks.isEmpty, "Published clocks should not be empty")
 //    }
-}
-
-// MARK: - Mock Services
-
-private class MockTimeService: TimeServiceProtocol {
-    var currentDate: Date = Date()
-    var formattedTimeResult: String = "12:00 AM"
-    var timeDifferenceResult: String = "Same time"
-    
-    var lastFormattedDate: Date?
-    var lastFormattedTimeZone: TimeZone?
-    var lastDifferenceSource: TimeZone?
-    var lastDifferenceTarget: TimeZone?
-    
-    func formattedTime(_ date: Date, timeZone: TimeZone) -> String {
-        lastFormattedDate = date
-        lastFormattedTimeZone = timeZone
-        return formattedTimeResult
-    }
-    
-    func timeDifference(from sourceTimeZone: TimeZone, to targetTimeZone: TimeZone) -> String {
-        lastDifferenceSource = sourceTimeZone
-        lastDifferenceTarget = targetTimeZone
-        return timeDifferenceResult
-    }
-}
-
-private class MockClockService: ClockServiceProtocol {
-    var clocks: [ClockModel] = []
-    
-    func loadClocks() -> [ClockModel] {
-        return clocks.isEmpty ? ClockModel.defaultClocks : clocks
-    }
-    
-    func saveClocks(_ clocks: [ClockModel]) throws {
-        self.clocks = clocks
-    }
-    
-    func addClock(_ clock: ClockModel) throws {
-        if clocks.contains(where: { $0.id == clock.id || ($0.cityName == clock.cityName && $0.timeZone.identifier == clock.timeZone.identifier) }) {
-            return
-        }
-        clocks.append(clock)
-    }
-    
-    func deleteClock(id: UUID) throws {
-        clocks.removeAll { $0.id == id }
-    }
-    
-    func deleteClocks(ids: [UUID]) throws {
-        clocks.removeAll { ids.contains($0.id) }
-    }
-    
-    func getClock(id: UUID) -> ClockModel? {
-        return clocks.first { $0.id == id }
-    }
 }
 

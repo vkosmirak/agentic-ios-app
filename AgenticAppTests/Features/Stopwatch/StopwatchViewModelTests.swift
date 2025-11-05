@@ -12,13 +12,13 @@ import Combine
 final class StopwatchViewModelTests: XCTestCase {
     
     private var viewModel: StopwatchViewModel!
-    private var mockStopwatchService: MockStopwatchService!
+    private var mockStopwatchService: StopwatchServiceMock!
     private var cancellables: Set<AnyCancellable>!
     
     override func setUp() {
         super.setUp()
         cancellables = []
-        mockStopwatchService = MockStopwatchService()
+        mockStopwatchService = StopwatchServiceMock()
         viewModel = StopwatchViewModel(stopwatchService: mockStopwatchService)
     }
     
@@ -456,10 +456,3 @@ final class StopwatchViewModelTests: XCTestCase {
         XCTAssertNotNil(viewModel.isRunning)
     }
 }
-
-// MARK: - Mock Stopwatch Service
-
-private class MockStopwatchService: StopwatchServiceProtocol {
-    // Empty implementation - stopwatch service is minimal
-}
-
