@@ -61,5 +61,4 @@ End with summary:
 - Reference `@ARCHITECTURE.md` for patterns
 - Cover all 12 categories
 - Zero tolerance: Critical = BLOCK merge
-- **Important**: Only classify architecture/style violations as Critical if they cause functional issues (bugs, crashes, broken tests, memory leaks). Pattern inconsistencies that don't impact functionality should be Suggestions.
 
