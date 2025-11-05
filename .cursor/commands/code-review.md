@@ -11,7 +11,6 @@ Zero tolerance for substandard code. Review **every line** comprehensively. Refe
 3. **SwiftUI/iOS**: Lifecycle (`onAppear`/`onDisappear`), state management (`@State`/`@StateObject`/`@ObservedObject`), task cancellation, coordinator-only navigation, accessibility
 4. **Concurrency**: Task cancellation, Combine cancellables, race conditions, main actor isolation, thread safety, @MainActor usage
 5. **Security**: Keychain for sensitive data, input validation, no hardcoded secrets, secure credential handling
-6. **Style**: Naming conventions, formatting consistency, file organization, pattern consistency
 
 ### 🟡 Warning (Should Fix)
 
@@ -22,6 +21,7 @@ Zero tolerance for substandard code. Review **every line** comprehensively. Refe
 
 ### 🟢 Suggestion (Nice to Have)
 
+10. **Style** (non-functional): Naming conventions, formatting consistency, file organization, pattern consistency that doesn't cause bugs (e.g., visibility modifiers, code organization).
 11. **Documentation**: Complex logic comments, public API docs, clarity
 12. **Code Quality**: SOLID principles, DRY violations, code smells (long methods >30 lines, large classes >200 lines, >3 params), complexity (<10), magic numbers, dead code
 
@@ -61,4 +61,5 @@ End with summary:
 - Reference `@ARCHITECTURE.md` for patterns
 - Cover all 12 categories
 - Zero tolerance: Critical = BLOCK merge
+- **Important**: Only classify architecture/style violations as Critical if they cause functional issues (bugs, crashes, broken tests, memory leaks). Pattern inconsistencies that don't impact functionality should be Suggestions.
 
