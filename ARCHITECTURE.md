@@ -132,40 +132,11 @@ final class FeatureCoordinator: Coordinator {
 
 ## Testing
 
+**For detailed unit testing guidelines**: See `@UNIT_TESTING.md` for file organization, mock guidelines, and testing best practices.
+
 - **Unit Tests**: ViewModels (state changes, user actions, business logic), Services (network, storage), Coordinators (navigation flows)
 - **UI Tests**: SwiftUI view testing, user interaction flows, navigation verification
 - **Test Infrastructure**: MockDependencyContainer for easy test setup
-
-### Testing Best Practices
-
-**Common Pitfalls to Avoid**:
-
-- **Optional Unwrapping**: Always unwrap optionals before comparing in assertions. Use `if let` or `guard let` instead of force unwrapping optionals in `XCTAssertEqual`:
-
-  ```swift
-  // ❌ Bad: Comparing optional directly
-  XCTAssertEqual(fastest?.lapTime, 0.59)
-  
-  // ✅ Good: Unwrap first
-  if let fastest = fastest {
-      XCTAssertEqual(fastest.lapTime, 0.59, accuracy: 0.01)
-  }
-  ```
-
-- **Floating Point Precision**: Use tolerance/accuracy for `TimeInterval` comparisons, and use `hasPrefix()`/`contains()` for formatted string tests when exact precision isn't critical:
-
-  ```swift
-  // ❌ Bad: Exact string comparison for floating point formatting
-  XCTAssertEqual(model.formattedTime, "00:02,01")
-  
-  // ✅ Good: Use tolerance or pattern matching
-  XCTAssertEqual(model.elapsedTime, 2.01, accuracy: 0.01)
-  XCTAssertTrue(model.formattedTime.hasPrefix("00:02"))
-  ```
-
-- **Test Data Accuracy**: Verify test data matches expectations (e.g., ensure "slowest" lap actually has the highest value in test setup)
-
-- **Variable Mutability**: Use `let` for immutable values, only use `var` when values need to change
 
 ## Best Practices
 
