@@ -1,30 +1,25 @@
-# Agentic iOS App
+# AgenticApp
 
-An iOS app configured for agent-friendly development using MCP (Model Context Protocol) servers.
+A comprehensive time management app for iOS that helps you stay organized and on schedule. This is an agentic clone of Apple's Clock app, featuring the same core functionality with a modern, intuitive interface.
 
-## For Agents
+## Features
 
-This repository is set up for Cursor agents to plan, develop, test, and QA features end-to-end.
+### World Clock
 
-**Quick Start**: See [AGENTS.md](./AGENTS.md) for simple instructions on how to build, test, run, and verify the app.
+View and manage clocks from different time zones around the world. Add multiple clocks to keep track of time in different locations, perfect for coordinating with friends, family, or colleagues across the globe.
 
-## MCP Servers
+### Alarms
 
-This project uses two MCP servers:
+Set, edit, and manage alarms to wake up on time or remind yourself of important events. Create multiple alarms and easily toggle them on or off as needed.
 
-1. **XcodeBuildMCP** - For building and testing iOS apps
-2. **ios-simulator-mcp** - For managing iOS simulators
+### Stopwatch
 
-Configuration is in `.cursor/mcp.json`.
+Track elapsed time with precision. Start and stop the stopwatch, record lap times, and see your fastest and slowest laps highlighted. Perfect for timing workouts, cooking, or any activity where you need to measure duration.
 
-## Project Structure
+### Timers
 
-- `AgenticApp/` - Main app source code
-- `AgenticAppTests/` - Unit tests
-- `AgenticAppUITests/` - UI tests
-- `.cursor/mcp.json` - MCP server configuration
-- `AGENTS.md` - Quick reference for agents
+Create countdown timers with customizable duration, labels, and sounds. Set timers for cooking, workouts, or any task that needs a time limit. Choose from different alert sounds and give your timers custom names to stay organized.
 
-## Development
+## Getting Started
 
-This is a SwiftUI iOS app created with Xcode. The app can be built and run on iOS simulators using the configured MCP servers.
+Simply launch the app and navigate between the four main tabs using the bottom navigation bar. Each feature is designed to be intuitive and easy to use, with a clean and modern interface.
