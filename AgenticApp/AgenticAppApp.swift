@@ -13,33 +13,11 @@ struct AgenticAppApp: App {
     private let appCoordinator: AppCoordinator
     
     init() {
-        // Initialize dependency container
         let container = DefaultDependencyContainer()
-        
-        // Register services
-        container.register(TimeServiceProtocol.self) {
-            TimeService() as TimeServiceProtocol
-        }
-        
-        container.register(AlarmServiceProtocol.self) {
-            AlarmService() as AlarmServiceProtocol
-        }
-        
-        container.register(ClockServiceProtocol.self) {
-            ClockService() as ClockServiceProtocol
-        }
-        
-        container.register(TimerServiceProtocol.self) {
-            TimerService() as TimerServiceProtocol
-        }
-        
-        container.register(StopwatchServiceProtocol.self) {
-            StopwatchService() as StopwatchServiceProtocol
-        }
+        container.registerAppServices()
         
         self.dependencyContainer = container
         
-        // Initialize and start app coordinator
         let coordinator = AppCoordinator(dependencyContainer: container)
         coordinator.start()
         self.appCoordinator = coordinator

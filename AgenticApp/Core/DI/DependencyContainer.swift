@@ -35,4 +35,3 @@ final class DefaultDependencyContainer: DependencyContainer {
         return factory()
     }
 }
-
