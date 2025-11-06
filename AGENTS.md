@@ -69,14 +69,14 @@ test_sim({
 
 ### Verify Functionality
 
-**For detailed verification workflow and UI checklist, see `@verify.md`**
+**For detailed verification workflow and UI checklist, see `@qa_verify.md`**
 
 Quick verification:
 1. `build_run_sim()` - Build, install, and launch app
 2. `describe_ui()` - Verify UI elements programmatically
 3. Navigate and test functionality
 
-Use `@verify.md` command for comprehensive verification with UI checklist and test case planning.
+Use `@qa_verify.md` command for comprehensive verification with UI checklist and test case planning.
 
 **Avoid redundant calls:**
 
@@ -111,5 +111,5 @@ clean({
 
 - **Never use `xcodebuild` directly** - Always use MCP tool calls (`build_run_sim()`, `test_sim()`, `build_sim()`, etc.)
 - Always use `simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0"` (iPhone 16 Pro iOS 18.4)
-- **Verification**: Use `@verify.md` command for comprehensive verification workflow and UI checklist
+- **Verification**: Use `@qa_verify.md` command for comprehensive verification workflow and UI checklist
 - **Parameter Names**: Build/test commands use `simulatorId`, while UI inspection commands (`describe_ui`, `screenshot`, `start_sim_log_cap`) use `simulatorUuid` - both accept the same UUID value.

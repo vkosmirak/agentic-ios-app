@@ -1,4 +1,4 @@
-# Verify Command
+# QA Verify Command
 
 Build, run, and verify functionality of the iOS app in the simulator.
 
@@ -43,3 +43,4 @@ Execute the prepared test plan step by step:
 - Use `simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0"` for build/test
 - Use `simulatorUuid: "B6E73094-CED6-458D-B9F5-9D65034F10E0"` for UI inspection
 - Use `describe_ui()` by default, `screenshot()` only when needed visually
+
