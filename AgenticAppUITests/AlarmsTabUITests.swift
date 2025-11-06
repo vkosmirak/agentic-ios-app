@@ -7,95 +7,85 @@
 
 import XCTest
 
-final class AlarmsTabUITests: XCTestCase {
-    var app: XCUIApplication!
-
-    override func setUpWithError() throws {
-        continueAfterFailure = false
-        app = XCUIApplication()
-        app.launch()
-        
-        // Navigate to Alarms tab
-        let alarmsTab = app.tabBars.buttons["Alarms"]
-        XCTAssertTrue(alarmsTab.waitForExistence(timeout: 2), "Alarms tab should exist")
-        alarmsTab.tap()
-    }
+final class AlarmsTabUITests: AgenticUITestCase {
     
     @MainActor
     func testAlarmsTab() throws {
-        // Verify the tab is selected
+        // 1. Launch the app
+        app.launch()
+        
+        // 2. Navigate to Alarms tab
         let alarmsTab = app.tabBars.buttons["Alarms"]
-        XCTAssertTrue(alarmsTab.isSelected, "Alarms tab should be selected")
+        alarmsTab
+            .assertExistence()
+            .tap()
+        alarmsTab.assertSelected()
         
-        // Verify navigation title
-        let navigationTitle = app.navigationBars["Alarms"]
-        XCTAssertTrue(navigationTitle.waitForExistence(timeout: 2), "Alarms navigation title should exist")
+        // 3. Verify navigation title
+        app.navigationBars["Alarms"]
+            .assertExistence()
         
-        // Verify the add button exists
-        let addButton = app.navigationBars.buttons["plus"]
-        XCTAssertTrue(addButton.waitForExistence(timeout: 2), "Add button should exist")
+        // 4. Verify the add button exists
+        app.navigationBars.buttons["plus"]
+            .assertExistence()
         
-        // Verify either empty state or some content is visible
+        // 5. Verify either empty state or some content is visible
         let emptyStateText = app.staticTexts["No Alarms"]
         let emptyStateHint = app.staticTexts["Tap + to add an alarm"]
         
         if emptyStateText.waitForExistence(timeout: 1) {
-            // Verify empty state elements
-            XCTAssertTrue(emptyStateText.exists, "Empty state should be visible when no alarms")
-            XCTAssertTrue(emptyStateHint.exists, "Empty state hint should be visible")
+            emptyStateText.assertExistence()
+            emptyStateHint.assertExistence()
         } else {
-            // If alarms exist, at least verify the screen is not showing empty state
-            XCTAssertFalse(emptyStateText.exists, "Empty state should not be visible when alarms exist")
+            emptyStateText.assertNonExistence()
         }
     }
     
     @MainActor
     func testAddAlarm() throws {
-        // Tap the add button
-        let addButton = app.navigationBars.buttons["plus"]
-        XCTAssertTrue(addButton.waitForExistence(timeout: 2), "Add button should exist")
-        addButton.tap()
+        // 1. Launch the app and navigate to Alarms tab
+        app.launch()
+        app.tabBars.buttons["Alarms"]
+            .assertExistence()
+            .tap()
         
-        // Verify the Add Alarm sheet is presented
-        let addAlarmTitle = app.navigationBars["Add Alarm"]
-        XCTAssertTrue(addAlarmTitle.waitForExistence(timeout: 2), "Add Alarm sheet should be presented")
+        // 2. Tap the add button
+        app.navigationBars.buttons["plus"]
+            .assertExistence()
+            .tap()
         
-        // Find the time picker (DatePicker with wheel style)
-        // The DatePicker might be accessible as a picker or as individual wheels
-        let timePicker = app.datePickers.firstMatch
-        XCTAssertTrue(timePicker.waitForExistence(timeout: 2), "Time picker should exist")
+        // 3. Verify the Add Alarm sheet is presented
+        app.navigationBars["Add Alarm"]
+            .assertExistence()
         
-        // Set a specific time (e.g., 8:30 AM)
-        // For wheel pickers, we need to interact with the individual wheels
+        // 4. Verify time picker exists
+        app.datePickers.firstMatch
+            .assertExistence()
+        
+        // 5. Set a specific time (8:30 AM)
         let pickerWheels = app.pickerWheels
         if pickerWheels.count >= 2 {
-            // Set hour to 8 (picker expects zero-padded values like "08")
-            let hourWheel = pickerWheels.element(boundBy: 0)
-            hourWheel.adjust(toPickerWheelValue: "08")
-            
-            // Set minute to 30
-            let minuteWheel = pickerWheels.element(boundBy: 1)
-            minuteWheel.adjust(toPickerWheelValue: "30")
+            pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "08")
+            pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "30")
         }
         
-        // Add a label
-        let labelField = app.textFields["Label"]
-        XCTAssertTrue(labelField.waitForExistence(timeout: 2), "Label field should exist")
-        labelField.tap()
-        labelField.typeText("Morning Alarm")
+        // 6. Add a label
+        app.textFields["Label"]
+            .assertExistence()
+            .tapAnd()
+            .typeText("Morning Alarm")
         
-        // Select repeat days (e.g., Monday and Wednesday)
-        let mondayButton = app.buttons["Monday"]
-        if mondayButton.waitForExistence(timeout: 1) {
-            mondayButton.tap()
-        }
+        // 7. Select repeat days (Monday and Wednesday)
+        app.buttons["Monday"]
+            .assertExistence()
+            .tap()
         
         let wednesdayButton = app.buttons["Wednesday"]
         if wednesdayButton.waitForExistence(timeout: 1) {
             wednesdayButton.tap()
         }
         
-        // Change sound to "Waves"
+        // 8. Change sound to "Waves"
         let soundPicker = app.pickers["Sound"]
         if soundPicker.waitForExistence(timeout: 1) {
             soundPicker.tap()
@@ -105,7 +95,7 @@ final class AlarmsTabUITests: XCTestCase {
             }
         }
         
-        // Toggle snooze off (if it's on)
+        // 9. Toggle snooze off (if it's on)
         let snoozeToggle = app.switches["Snooze"]
         if snoozeToggle.waitForExistence(timeout: 1) {
             if snoozeToggle.value as? String == "1" {
@@ -113,65 +103,68 @@ final class AlarmsTabUITests: XCTestCase {
             }
         }
         
-        // Save the alarm
-        let saveButton = app.buttons["Save"]
-        XCTAssertTrue(saveButton.waitForExistence(timeout: 2), "Save button should exist")
-        saveButton.tap()
+        // 10. Save the alarm
+        app.buttons["Save"]
+            .assertExistence()
+            .tap()
         
-        // Verify the sheet is dismissed
-        XCTAssertFalse(addAlarmTitle.waitForExistence(timeout: 1), "Add Alarm sheet should be dismissed")
+        // 11. Verify the sheet is dismissed
+        app.navigationBars["Add Alarm"]
+            .assertNonExistence()
         
-        // Verify the alarm appears in the list
-        // The alarm should show the time we set (8:30 AM format)
-        let alarmTime = app.staticTexts.containing(NSPredicate(format: "label CONTAINS '8' OR label CONTAINS '30'")).firstMatch
-        XCTAssertTrue(alarmTime.waitForExistence(timeout: 2), "Alarm should appear in the list")
+        // 12. Verify the alarm appears in the list
+        app.staticTexts.containing(NSPredicate(format: "label CONTAINS '8' OR label CONTAINS '30'"))
+            .firstMatch
+            .assertExistence()
         
-        // Verify the label appears
-        let alarmLabel = app.staticTexts["Morning Alarm"]
-        XCTAssertTrue(alarmLabel.waitForExistence(timeout: 2), "Alarm label should be visible")
+        // 13. Verify the label appears
+        app.staticTexts["Morning Alarm"]
+            .assertExistence()
     }
     
     @MainActor
     func testEditAlarm() throws {
-        // First, add an alarm to edit
-        let addButton = app.navigationBars.buttons["plus"]
-        XCTAssertTrue(addButton.waitForExistence(timeout: 2), "Add button should exist")
-        addButton.tap()
+        // 1. Launch the app and navigate to Alarms tab
+        app.launch()
+        app.tabBars.buttons["Alarms"]
+            .assertExistence()
+            .tap()
         
-        let addAlarmTitle = app.navigationBars["Add Alarm"]
-        XCTAssertTrue(addAlarmTitle.waitForExistence(timeout: 2), "Add Alarm sheet should be presented")
+        // 2. Add an alarm to edit
+        app.navigationBars.buttons["plus"]
+            .assertExistence()
+            .tap()
         
-        // Add a simple alarm
-        let labelField = app.textFields["Label"]
-        if labelField.waitForExistence(timeout: 2) {
-            labelField.tap()
-            labelField.typeText("Original Alarm")
-        }
+        app.navigationBars["Add Alarm"]
+            .assertExistence()
         
-        let saveButton = app.buttons["Save"]
-        XCTAssertTrue(saveButton.waitForExistence(timeout: 2), "Save button should exist")
-        saveButton.tap()
+        app.textFields["Label"]
+            .assertExistence()
+            .tapAnd()
+            .typeText("Original Alarm")
         
-        // Wait for the alarm to appear
+        app.buttons["Save"]
+            .assertExistence()
+            .tap()
+        
+        // 3. Wait for the alarm to appear
         let originalLabel = app.staticTexts["Original Alarm"]
-        XCTAssertTrue(originalLabel.waitForExistence(timeout: 2), "Original alarm should appear")
+        originalLabel.assertExistence()
         
-        // Tap on the alarm to edit it
+        // 4. Tap on the alarm to edit it
         originalLabel.tap()
         
-        // Verify the Edit Alarm sheet is presented
-        let editAlarmTitle = app.navigationBars["Edit Alarm"]
-        XCTAssertTrue(editAlarmTitle.waitForExistence(timeout: 2), "Edit Alarm sheet should be presented")
+        // 5. Verify the Edit Alarm sheet is presented
+        app.navigationBars["Edit Alarm"]
+            .assertExistence()
         
-        // Modify the label
-        let editLabelField = app.textFields["Label"]
-        XCTAssertTrue(editLabelField.waitForExistence(timeout: 2), "Label field should exist in edit mode")
-        editLabelField.tap()
+        // 6. Modify the label
+        app.textFields["Label"]
+            .assertExistence()
+            .tapAnd()
+            .clearAndEnterText("Updated Alarm")
         
-        // Clear existing text and type new text
-        editLabelField.clearAndEnterText("Updated Alarm")
-        
-        // Change sound to "Cosmic"
+        // 7. Change sound to "Cosmic"
         let soundPicker = app.pickers["Sound"]
         if soundPicker.waitForExistence(timeout: 1) {
             soundPicker.tap()
@@ -181,56 +174,60 @@ final class AlarmsTabUITests: XCTestCase {
             }
         }
         
-        // Add Friday to repeat days
+        // 8. Add Friday to repeat days
         let fridayButton = app.buttons["Friday"]
         if fridayButton.waitForExistence(timeout: 1) {
             fridayButton.tap()
         }
         
-        // Save the changes
-        let editSaveButton = app.buttons["Save"]
-        XCTAssertTrue(editSaveButton.waitForExistence(timeout: 2), "Save button should exist")
-        editSaveButton.tap()
+        // 9. Save the changes
+        app.buttons["Save"]
+            .assertExistence()
+            .tap()
         
-        // Verify the sheet is dismissed
-        XCTAssertFalse(editAlarmTitle.waitForExistence(timeout: 1), "Edit Alarm sheet should be dismissed")
+        // 10. Verify the sheet is dismissed
+        app.navigationBars["Edit Alarm"]
+            .assertNonExistence()
         
-        // Verify the updated label appears
-        let updatedLabel = app.staticTexts["Updated Alarm"]
-        XCTAssertTrue(updatedLabel.waitForExistence(timeout: 2), "Updated alarm label should be visible")
+        // 11. Verify the updated label appears
+        app.staticTexts["Updated Alarm"]
+            .assertExistence()
         
-        // Verify the original label is gone
-        XCTAssertFalse(app.staticTexts["Original Alarm"].exists, "Original alarm label should not exist")
+        // 12. Verify the original label is gone
+        app.staticTexts["Original Alarm"]
+            .assertNonExistence()
     }
     
     @MainActor
     func testDeleteAlarm() throws {
-        // First, add an alarm to delete
-        let addButton = app.navigationBars.buttons["plus"]
-        XCTAssertTrue(addButton.waitForExistence(timeout: 2), "Add button should exist")
-        addButton.tap()
+        // 1. Launch the app and navigate to Alarms tab
+        app.launch()
+        app.tabBars.buttons["Alarms"]
+            .assertExistence()
+            .tap()
         
-        let addAlarmTitle = app.navigationBars["Add Alarm"]
-        XCTAssertTrue(addAlarmTitle.waitForExistence(timeout: 2), "Add Alarm sheet should be presented")
+        // 2. Add an alarm to delete
+        app.navigationBars.buttons["plus"]
+            .assertExistence()
+            .tap()
         
-        // Add a simple alarm with a unique label
-        let labelField = app.textFields["Label"]
-        if labelField.waitForExistence(timeout: 2) {
-            labelField.tap()
-            labelField.typeText("Alarm To Delete")
-        }
+        app.navigationBars["Add Alarm"]
+            .assertExistence()
         
-        let saveButton = app.buttons["Save"]
-        XCTAssertTrue(saveButton.waitForExistence(timeout: 2), "Save button should exist")
-        saveButton.tap()
+        app.textFields["Label"]
+            .assertExistence()
+            .tapAnd()
+            .typeText("Alarm To Delete")
         
-        // Wait for the alarm to appear
+        app.buttons["Save"]
+            .assertExistence()
+            .tap()
+        
+        // 3. Wait for the alarm to appear
         let alarmToDelete = app.staticTexts["Alarm To Delete"]
-        XCTAssertTrue(alarmToDelete.waitForExistence(timeout: 2), "Alarm should appear in the list")
+        alarmToDelete.assertExistence()
         
-        // Find the cell containing the alarm text
-        // In SwiftUI List, we can swipe on the static text element itself
-        // or find the containing cell
+        // 4. Find the cell containing the alarm text and swipe left
         let cells = app.cells
         var alarmCell: XCUIElement?
         
@@ -242,66 +239,69 @@ final class AlarmsTabUITests: XCTestCase {
             }
         }
         
-        // If we found a cell, swipe on it, otherwise swipe on the text element
         let elementToSwipe = alarmCell ?? alarmToDelete
         elementToSwipe.swipeLeft()
         
-        // Tap the delete button
-        let deleteButton = app.buttons["Delete"]
-        XCTAssertTrue(deleteButton.waitForExistence(timeout: 2), "Delete button should appear")
-        deleteButton.tap()
+        // 5. Tap the delete button
+        app.buttons["Delete"]
+            .assertExistence()
+            .tap()
         
-        // Verify the alarm is removed
-        XCTAssertFalse(alarmToDelete.waitForExistence(timeout: 2), "Alarm should be deleted from the list")
+        // 6. Verify the alarm is removed
+        alarmToDelete.assertNonExistence()
     }
     
     @MainActor
     func testAddEditDeleteFlow() throws {
-        // Test complete flow: Add -> Edit -> Delete
+        // 1. Launch the app and navigate to Alarms tab
+        app.launch()
+        app.tabBars.buttons["Alarms"]
+            .assertExistence()
+            .tap()
         
-        // Step 1: Add an alarm
-        let addButton = app.navigationBars.buttons["plus"]
-        XCTAssertTrue(addButton.waitForExistence(timeout: 2), "Add button should exist")
-        addButton.tap()
+        // 2. Add an alarm
+        app.navigationBars.buttons["plus"]
+            .assertExistence()
+            .tap()
         
-        let addAlarmTitle = app.navigationBars["Add Alarm"]
-        XCTAssertTrue(addAlarmTitle.waitForExistence(timeout: 2), "Add Alarm sheet should be presented")
+        app.navigationBars["Add Alarm"]
+            .assertExistence()
         
-        let labelField = app.textFields["Label"]
-        if labelField.waitForExistence(timeout: 2) {
-            labelField.tap()
-            labelField.typeText("Complete Flow Alarm")
-        }
+        app.textFields["Label"]
+            .assertExistence()
+            .tapAnd()
+            .typeText("Complete Flow Alarm")
         
-        let saveButton = app.buttons["Save"]
-        XCTAssertTrue(saveButton.waitForExistence(timeout: 2), "Save button should exist")
-        saveButton.tap()
+        app.buttons["Save"]
+            .assertExistence()
+            .tap()
         
-        // Verify alarm was added
+        // 3. Verify alarm was added
         let addedAlarm = app.staticTexts["Complete Flow Alarm"]
-        XCTAssertTrue(addedAlarm.waitForExistence(timeout: 2), "Alarm should be added")
+        addedAlarm.assertExistence()
         
-        // Step 2: Edit the alarm
+        // 4. Edit the alarm
         addedAlarm.tap()
         
-        let editAlarmTitle = app.navigationBars["Edit Alarm"]
-        XCTAssertTrue(editAlarmTitle.waitForExistence(timeout: 2), "Edit Alarm sheet should be presented")
+        app.navigationBars["Edit Alarm"]
+            .assertExistence()
         
-        let editLabelField = app.textFields["Label"]
-        if editLabelField.waitForExistence(timeout: 2) {
-            editLabelField.tap()
-            editLabelField.clearAndEnterText("Edited Flow Alarm")
-        }
+        app.textFields["Label"]
+            .assertExistence()
+            .tapAnd()
+            .clearAndEnterText("Edited Flow Alarm")
         
-        let editSaveButton = app.buttons["Save"]
-        editSaveButton.tap()
+        app.buttons["Save"]
+            .assertExistence()
+            .tap()
         
-        // Verify alarm was edited
+        // 5. Verify alarm was edited
         let editedAlarm = app.staticTexts["Edited Flow Alarm"]
-        XCTAssertTrue(editedAlarm.waitForExistence(timeout: 2), "Alarm should be edited")
-        XCTAssertFalse(app.staticTexts["Complete Flow Alarm"].exists, "Original label should be gone")
+        editedAlarm.assertExistence()
+        app.staticTexts["Complete Flow Alarm"]
+            .assertNonExistence()
         
-        // Step 3: Delete the alarm
+        // 6. Delete the alarm
         let cells = app.cells
         var alarmCell: XCUIElement?
         
@@ -316,30 +316,11 @@ final class AlarmsTabUITests: XCTestCase {
         let elementToSwipe = alarmCell ?? editedAlarm
         elementToSwipe.swipeLeft()
         
-        let deleteButton = app.buttons["Delete"]
-        XCTAssertTrue(deleteButton.waitForExistence(timeout: 2), "Delete button should appear")
-        deleteButton.tap()
+        app.buttons["Delete"]
+            .assertExistence()
+            .tap()
         
-        // Verify alarm was deleted
-        XCTAssertFalse(editedAlarm.waitForExistence(timeout: 2), "Alarm should be deleted")
+        // 7. Verify alarm was deleted
+        editedAlarm.assertNonExistence()
     }
 }
-
-// Helper extension for text field clearing
-extension XCUIElement {
-    func clearAndEnterText(_ text: String) {
-        guard let stringValue = self.value as? String else {
-            XCTFail("Tried to clear and enter text into a non string value")
-            return
-        }
-        
-        self.tap()
-        
-        let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: stringValue.count)
-        self.typeText(deleteString)
-        self.typeText(text)
-    }
-}
-
-
-

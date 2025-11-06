@@ -7,48 +7,39 @@
 
 import XCTest
 
-final class TimersTabUITests: XCTestCase {
-
-    override func setUpWithError() throws {
-        continueAfterFailure = false
-    }
+final class TimersTabUITests: AgenticUITestCase {
     
     @MainActor
     func testTimersTab() throws {
-        // Launch the app
-        let app = XCUIApplication()
+        // 1. Launch the app
         app.launch()
         
-        // Navigate to Timers tab
+        // 2. Navigate to Timers tab
         let timersTab = app.tabBars.buttons["Timers"]
-        XCTAssertTrue(timersTab.waitForExistence(timeout: 2), "Timers tab should exist")
-        timersTab.tap()
+        timersTab
+            .assertExistence()
+            .tap()
+        timersTab.assertSelected()
         
-        // Verify the tab is selected
-        XCTAssertTrue(timersTab.isSelected, "Timers tab should be selected")
+        // 3. Verify navigation title
+        app.navigationBars["Timers"]
+            .assertExistence()
         
-        // Verify navigation title
-        let navigationTitle = app.navigationBars["Timers"]
-        XCTAssertTrue(navigationTitle.waitForExistence(timeout: 2), "Timers navigation title should exist")
+        // 4. Verify timer picker wheels exist (hours, minutes, seconds)
+        XCTAssertTrue(app.pickers.count >= 3, "Timer pickers should exist (hours, minutes, seconds)")
         
-        // Verify timer picker wheels exist (hours, minutes, seconds)
-        // SwiftUI pickers might be exposed as picker wheels or buttons
-        let pickers = app.pickers
-        XCTAssertTrue(pickers.count >= 3, "Timer pickers should exist (hours, minutes, seconds)")
+        // 5. Verify control buttons exist
+        app.buttons["Reset"]
+            .assertExistence()
         
-        // Verify control buttons exist
-        let resetButton = app.buttons["Reset"]
-        let startButton = app.buttons["Start"]
+        app.buttons["Start"]
+            .assertExistence()
         
-        XCTAssertTrue(resetButton.waitForExistence(timeout: 2), "Reset button should exist")
-        XCTAssertTrue(startButton.waitForExistence(timeout: 2), "Start button should exist")
+        // 6. Verify settings section exists
+        app.buttons["Name"]
+            .assertExistence()
         
-        // Verify settings section exists
-        let nameButton = app.buttons["Name"]
-        let whenTimerEndsButton = app.buttons["When Timer Ends"]
-        
-        XCTAssertTrue(nameButton.waitForExistence(timeout: 2), "Name button should exist")
-        XCTAssertTrue(whenTimerEndsButton.waitForExistence(timeout: 2), "When Timer Ends button should exist")
+        app.buttons["When Timer Ends"]
+            .assertExistence()
     }
 }
-

@@ -7,46 +7,51 @@
 
 import XCTest
 
-final class StopwatchTabUITests: XCTestCase {
-
-    override func setUpWithError() throws {
-        continueAfterFailure = false
-    }
+final class StopwatchTabUITests: AgenticUITestCase {
     
     @MainActor
     func testStopwatchTab() throws {
-        // Launch the app
-        let app = XCUIApplication()
+        // 1. Launch the app
         app.launch()
         
-        // Navigate to Stopwatch tab
+        // 2. Navigate to Stopwatch tab
         let stopwatchTab = app.tabBars.buttons["Stopwatch"]
-        XCTAssertTrue(stopwatchTab.waitForExistence(timeout: 2), "Stopwatch tab should exist")
-        stopwatchTab.tap()
+        stopwatchTab
+            .assertExistence()
+            .tap()
+        stopwatchTab.assertSelected()
         
-        // Verify the tab is selected
-        XCTAssertTrue(stopwatchTab.isSelected, "Stopwatch tab should be selected")
+        // 3. Verify navigation title
+        app.navigationBars["Stopwatch"]
+            .assertExistence()
         
-        // Verify navigation title
-        let navigationTitle = app.navigationBars["Stopwatch"]
-        XCTAssertTrue(navigationTitle.waitForExistence(timeout: 2), "Stopwatch navigation title should exist")
+        // 4. Verify time display exists
+        XCTAssertTrue(app.staticTexts.count > 0, "Time display should exist")
         
-        // Verify time display exists (should show "0:00.00" or similar)
-        // The time display is a large text element
-        let staticTexts = app.staticTexts
-        XCTAssertTrue(staticTexts.count > 0, "Time display should exist")
+        // 5. Verify control buttons exist
+        // The buttons use accessibility labels, so we check for those or the button text
+        // Lap/Reset button: accessibilityLabel "Record lap time" or "Reset stopwatch", or text "Lap"/"Reset"
+        let lapButton = app.buttons["Record lap time"]
+        let resetButton = app.buttons["Reset stopwatch"]
+        let lapTextButton = app.buttons["Lap"]
+        let resetTextButton = app.buttons["Reset"]
         
-        // Verify control buttons exist
-        // Check for buttons with "Lap", "Reset", "Start", or "Stop" text
-        let lapButton = app.buttons["Lap"]
-        let resetButton = app.buttons["Reset"]
-        let startButton = app.buttons["Start"]
-        let stopButton = app.buttons["Stop"]
-        
-        let hasLapOrReset = lapButton.waitForExistence(timeout: 2) || resetButton.waitForExistence(timeout: 1)
-        let hasStartOrStop = startButton.waitForExistence(timeout: 2) || stopButton.waitForExistence(timeout: 1)
-        
+        let hasLapOrReset = lapButton.waitForExistence(timeout: 1) ||
+                           resetButton.waitForExistence(timeout: 1) ||
+                           lapTextButton.waitForExistence(timeout: 1) ||
+                           resetTextButton.waitForExistence(timeout: 1)
         XCTAssertTrue(hasLapOrReset, "Lap/Reset button should exist")
+        
+        // Start/Stop button: accessibilityLabel "Start stopwatch" or "Stop stopwatch", or text "Start"/"Stop"
+        let startButton = app.buttons["Start stopwatch"]
+        let stopButton = app.buttons["Stop stopwatch"]
+        let startTextButton = app.buttons["Start"]
+        let stopTextButton = app.buttons["Stop"]
+        
+        let hasStartOrStop = startButton.waitForExistence(timeout: 1) ||
+                            stopButton.waitForExistence(timeout: 1) ||
+                            startTextButton.waitForExistence(timeout: 1) ||
+                            stopTextButton.waitForExistence(timeout: 1)
         XCTAssertTrue(hasStartOrStop, "Start/Stop button should exist")
     }
 }
