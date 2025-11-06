@@ -39,18 +39,38 @@ build_sim({
 })
 ```
 
-### Run Tests
+### Run Unit Tests
 
 ```
-// Unit tests
+// Run all unit tests
 test_sim({
   projectPath: "AgenticApp.xcodeproj",
   scheme: "AgenticApp",
   simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0",
-  extraArgs: []
+  extraArgs: ["-only-testing:AgenticAppTests"]
 })
 
-// UI tests only
+// Run specific test class
+test_sim({
+  projectPath: "AgenticApp.xcodeproj",
+  scheme: "AgenticApp",
+  simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0",
+  extraArgs: ["-only-testing:AgenticAppTests/TimeServiceTests"]
+})
+
+// Run specific test method
+test_sim({
+  projectPath: "AgenticApp.xcodeproj",
+  scheme: "AgenticApp",
+  simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0",
+  extraArgs: ["-only-testing:AgenticAppTests/TimeServiceTests/testCurrentTimeReturnsValidDate"]
+})
+```
+
+### Run UI Tests
+
+```
+// Run all UI tests
 test_sim({
   projectPath: "AgenticApp.xcodeproj",
   scheme: "AgenticApp",
@@ -58,12 +78,12 @@ test_sim({
   extraArgs: ["-only-testing:AgenticAppUITests"]
 })
 
-// Run specific test method or class
+// Run specific UI test class
 test_sim({
   projectPath: "AgenticApp.xcodeproj",
   scheme: "AgenticApp",
   simulatorId: "B6E73094-CED6-458D-B9F5-9D65034F10E0",
-  extraArgs: ["-only-testing:AgenticAppTests/TimeServiceTests/testCurrentTimeReturnsValidDate"]
+  extraArgs: ["-only-testing:AgenticAppUITests/WorldClockTabUITests"]
 })
 ```
 
