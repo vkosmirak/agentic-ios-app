@@ -19,7 +19,3 @@ Track elapsed time with precision. Start and stop the stopwatch, record lap time
 ### Timers
 
 Create countdown timers with customizable duration, labels, and sounds. Set timers for cooking, workouts, or any task that needs a time limit. Choose from different alert sounds and give your timers custom names to stay organized.
-
-## Getting Started
-
-Simply launch the app and navigate between the four main tabs using the bottom navigation bar. Each feature is designed to be intuitive and easy to use, with a clean and modern interface.
