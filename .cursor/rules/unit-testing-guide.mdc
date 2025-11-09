@@ -1,0 +1,78 @@
+---
+description: Unit testing guidelines for AgenticApp - file organization, naming conventions, mock patterns, and best practices
+globs:
+  - "**/*Tests.swift"
+alwaysApply: false
+---
+<unit-testing-guide>
+
+<title>Unit Testing Guidelines</title>
+
+<file-organization>
+<folder-structure>
+- Preserve the same folder structure as production code
+- `AgenticApp/Core/Services/...` → `AgenticAppTests/Core/Services/...`
+- `AgenticApp/Features/Stopwatch/...` → `AgenticAppTests/Features/Stopwatch/...`
+</folder-structure>
+
+<test-file-naming>
+- Test files: `[Class]Tests.swift`
+- Example: `StopwatchViewModel.swift` → `StopwatchViewModelTests.swift`
+</test-file-naming>
+
+<mock-files>
+- Mocks must be separate files, not inline in test files
+- Mock file naming: `[Service]Mock.swift`
+- Example: `TimeService` → `TimeServiceMock.swift`
+- Place mocks in the same directory structure as the service being mocked
+</mock-files>
+</file-organization>
+
+<mock-guidelines>
+- Implement the protocol fully
+- Provide settable properties for test data
+- Track method calls and parameters
+- Use descriptive variable names (e.g., `lastFormattedDate`, `callCount`)
+</mock-guidelines>
+
+<best-practices>
+- Use Given-When-Then pattern for test readability
+- Test one thing per test method
+- Use descriptive test names: `testFunctionNameWithCondition_ExpectedBehavior`
+- Clean up in `tearDown()`: Stop timers, cancel subscriptions, nil references
+- Use expectations for async operations and Combine publishers
+- Use `XCTUnwrap` or `XCTAssertNotNil` for optionals: Don't use force unwrapping or `if let`
+</best-practices>
+
+<examples>
+<example type="test-structure">
+```swift
+func testCurrentTimeReturnsValidDate() {
+    // Given
+    let service = TimeService()
+
+    // When
+    let result = service.currentTime()
+
+    // Then
+    XCTAssertNotNil(result)
+}
+```
+</example>
+
+<example type="mock-implementation">
+```swift
+class TimeServiceMock: TimeServiceProtocol {
+    var lastFormattedDate: String?
+    var callCount = 0
+
+    func formatDate(_ date: Date) -> String {
+        callCount += 1
+        return lastFormattedDate ?? ""
+    }
+}
+```
+</example>
+</examples>
+
+</unit-testing-guide>

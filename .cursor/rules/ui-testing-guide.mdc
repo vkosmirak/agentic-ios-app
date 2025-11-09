@@ -1,0 +1,73 @@
+---
+description: UI testing guidelines for AgenticApp - base test case, helper methods, chaining patterns, and best practices
+globs:
+  - "**/*UITests.swift"
+alwaysApply: false
+---
+
+<ui-testing>
+
+<title>UI Testing Guidelines</title>
+
+<base-test-case>
+- All UI tests inherit from `AgenticUITestCase`
+- `app` is available without explicit launch in test methods
+</base-test-case>
+
+<helper-methods>
+- Use `assertExistence()` instead of `waitForExistence(timeout:)`
+- Use `assertSelected()` for tab bar buttons
+- Use `assertEnabled()` for button state checks
+- Use `assertNonExistence()` for elements that should not exist
+- Use `tapAnd()` when chaining operations on the same element
+- Use `clearAndEnterText()` for text field input
+- Use `awaiting(element:for:)` for conditional waits
+</helper-methods>
+
+<chaining-patterns>
+- Prefer chaining: `element.assertExistence().tap()`
+- Use `tapAnd()` instead of `tap()` when you need to chain operations on the same element
+- Don't extract to `let` when chaining operations on the same element
+- Use `firstMatch` when you only need the first matching element
+</chaining-patterns>
+
+<best-practices>
+- Keep tests focused on one specific behavior
+- Use descriptive comments to explain what you're testing
+- Always replace `waitForExistence(timeout:)` with `assertExistence()`
+- Use helper methods instead of raw XCTest APIs
+- `continueAfterFailure = false` is handled by `AgenticUITestCase`
+</best-practices>
+
+<patterns-to-avoid>
+- Don't use `waitForExistence(timeout:)` directly (use `assertExistence()`)
+- Don't extract to `let` when chaining operations on the same element
+- Don't use `tap()` when you need to chain operations (use `tapAnd()`)
+- Don't use `XCTAssertTrue(waitForExistence())` (use `assertExistence()`)
+</patterns-to-avoid>
+
+<examples>
+<example type="good">
+```swift
+final class MyUITests: AgenticUITestCase {
+    func testButtonInteraction() throws {
+        app.buttons["Start"]
+            .assertExistence()
+            .tap()
+
+        app.tabBars.buttons["Stopwatch"]
+            .assertExistence()
+            .tapAnd()
+            .assertSelected()
+
+        app.textFields["Label"]
+            .assertExistence()
+            .tapAnd()
+            .clearAndEnterText("New Label")
+    }
+}
+```
+</example>
+</examples>
+
+</ui-testing>
